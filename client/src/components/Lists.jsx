@@ -64,8 +64,11 @@ export default function Lists() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          overflowY: "scroll",
+          overflowY: "auto",
           maxHeight: "60vh",
+          [theme.breakpoints.down('ms3')]: {
+            maxHeight:"100vh"
+          }
         }}
       >
         {Array.isArray(data) &&

@@ -29,7 +29,7 @@ export default function TodoList() {
         justifyContent: "center",
         alignItems: "center",
         height: "30vh",
-        [theme.breakpoints.down('sm')]: {mt:"20vh"}
+        [theme.breakpoints.down('sm')]: {mt:"10vh"}
       }}
     >
       <Box
