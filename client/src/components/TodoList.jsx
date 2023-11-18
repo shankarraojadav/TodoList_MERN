@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addTodo } from "../service/api";
 import { useState } from "react";
 import { getAllLists,  } from "../service/api";
+import { theme } from "../../theme";
 
 export default function TodoList() {
   const [data, setData] = useState({});
@@ -28,6 +29,7 @@ export default function TodoList() {
         justifyContent: "center",
         alignItems: "center",
         height: "30vh",
+        [theme.breakpoints.down('sm')]: {mt:"40vh"}
       }}
     >
       <Box
