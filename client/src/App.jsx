@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { verifyToken } from "./service/api";
 import Home from "./components/Home";
+import EditTodoList from "./components/EditTodoList";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/edit/:id" element={ <EditTodoList /> } />
       </Routes>
     </Box>
   );

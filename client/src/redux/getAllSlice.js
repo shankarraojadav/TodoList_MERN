@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteOne, getAllLists, updateTodo, addTodo, deleteSelected } from "../service/api";
+import { deleteOne, getAllLists, updateTodo, addTodo, deleteSelected, updateList } from "../service/api";
 
 const initialState = {
   data: [],
@@ -26,7 +26,7 @@ const getListSlice = createSlice({
         state.error = action.error;
         state.isLoading = false;
       })
-       .addCase(addTodo.pending, (state) => {
+      .addCase(addTodo.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(addTodo.fulfilled, (state, action) => {
@@ -74,6 +74,18 @@ const getListSlice = createSlice({
         state.error = action.payload;
         state.isLoading = false;
       })
+      .addCase(updateList.pending, (state) => {
+        state.isLoading = true;
+        state.error = null; 
+      })
+      .addCase(updateList.fulfilled, (state, action) => {
+        state.data = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(updateList.rejected, (state, action) => {
+        state.error = action.error;
+        state.isLoading = false;
+      });
   },
 });
 

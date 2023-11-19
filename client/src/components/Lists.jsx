@@ -1,5 +1,18 @@
-import { Box, Typography, Checkbox, Button, IconButton } from "@mui/material";
-import { useEffect, useState } from "react";
+import {
+  Box,
+  Typography,
+  Checkbox,
+  Button,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+import { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getAllLists,
@@ -7,14 +20,18 @@ import {
   deleteSelected,
   deleteOne,
 } from "../service/api";
-import { Delete } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { Delete, Edit } from "@mui/icons-material";
 import { theme } from "../../theme";
+import { NotificationContext } from "../context/NotificationProvider";
 
 export default function Lists() {
+  const { updateNotification } = useContext(NotificationContext);
   const { data } = useSelector((state) => state.allLists || { data: [] });
   const dispatch = useDispatch();
-
   const [selectAll, setSelectAll] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("useEffect - Dispatching getAllLists");
@@ -36,12 +53,22 @@ export default function Lists() {
   const handleDelete = () => {
     if (selectAll) {
       dispatch(deleteSelected(selectAll));
+    } else {
+      updateNotification("error", "Please Select All before Deleting All!");
     }
   };
 
   const handleDeleteOne = (id) => {
     dispatch(deleteOne(id));
   };
+
+
+  const handleEdit = (id) => {
+    navigate(`/edit/${id}`);
+  }
+
+
+  
 
   return (
     <Box
@@ -55,78 +82,52 @@ export default function Lists() {
       {data.length > 0 && (
         <Box sx={{}}>
           <Button onClick={handleSelectAll}>Select All</Button>
-          <Button onClick={handleDelete}>Delete Selected</Button>
+          <Button onClick={handleDelete}>Delete All</Button>
         </Box>
       )}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          overflowY: "auto",
-          maxHeight: "60vh",
-          [theme.breakpoints.down('ms3')]: {
-            maxHeight:"100vh"
-          }
-        }}
-      >
-        {Array.isArray(data) &&
-          data.map((todo, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: 2,
-                marginBottom: 2,
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                borderRadius: 4,
-                width: "100vh",
-                textDecoration: todo.completed ? "line-through" : "none",
-                [theme.breakpoints.down('sm')]: {width:"70vh"},
-                [theme.breakpoints.down("ms3")]: {width: "50vh", overflowX:"hidden"}
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Checkbox
-                  checked={selectAll || todo.completed}
-                  onChange={() => handleToggle(todo._id, todo.completed)}
-                />
-                <Typography
-                  sx={{
-                    ml: "10vh",
-                    [theme.breakpoints.down("sm")]: { ml: "3vh" },
-                  }}
-                >
-                  {todo.title}
-                </Typography>
-                <Typography
-                  sx={{
-                    ml: "30vh",
-                    [theme.breakpoints.down("sm")]: { ml: "3vh" },
-                  }}
-                >
-                  {todo.createdAt}
-                </Typography>
-              </Box>
-              <Box>
-                <IconButton onClick={() => handleDeleteOne(todo._id)}>
-                  <Delete />
-                </IconButton>
-              </Box>
-            </Box>
-          ))}
-      </Box>
+      {data.length > 0 && (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>TodoList</TableCell>
+                <TableCell>CreatedAt</TableCell>
+                <TableCell>CompletedAt</TableCell>
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Array.isArray(data) &&
+                data.map((todo, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      textDecoration: todo.completed ? "line-through" : "none",
+                    }}
+                  >
+                    <TableCell>
+                      <Checkbox
+                        checked={selectAll || todo.completed}
+                        onChange={() => handleToggle(todo._id, todo.completed)}
+                      />
+                      {todo.title}
+                    </TableCell>
+                    <TableCell>{todo.createdAt}</TableCell>
+                    <TableCell>{todo.completedAt}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleDeleteOne(todo._id)}>
+                        <Delete />
+                      </IconButton>
+                      <IconButton onClick={() => handleEdit(todo._id)}>
+                        <Edit />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Box>
   );
 }

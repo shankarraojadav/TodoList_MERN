@@ -7,9 +7,11 @@ const todoSchema = new mongoose.Schema({
     required: true,
   },
   title: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
+  createdAt: { type: String, default: new Date().toLocaleString() },
+  completedAt: { type: String, default: null },
   completed: { type: Boolean, default: false },
 });
+
 
 const Todo = mongoose.model("Todo", todoSchema);
 

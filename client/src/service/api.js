@@ -1,7 +1,8 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const url = "https://todolist-9ig6.onrender.com" || "http://localhost:3000";
+const url =  "http://localhost:3000"; 
+// "https://todolist-9ig6.onrender.com" ||
 
 export const googleAuth = createAsyncThunk(
   "signin",
@@ -84,6 +85,37 @@ export const getAllLists = createAsyncThunk(
     }
   }
 );
+
+
+// update todo
+
+export const updateList = createAsyncThunk(
+  "updateList",
+  async (data, { rejectWithValue }) => {
+    try {
+  
+      const token = localStorage.getItem("jwt");
+      const response = await axios.put(
+        `${url}/updatetodo`,
+        data,
+        {
+          headers: {
+            authorization: "Bearer" + token,
+            Accept: "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        "Failed to update completed, please try after some time."
+      );
+    }
+  }
+);
+
+
+// update completed or not
 
 export const updateTodo = createAsyncThunk(
   "update",

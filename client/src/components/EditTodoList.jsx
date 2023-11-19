@@ -1,25 +1,46 @@
 import { Box, IconButton, InputBase } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTodo } from "../service/api";
-import { useState } from "react";
-import { getAllLists,  } from "../service/api";
+import { useState, useEffect } from "react";
+import { getAllLists, updateList } from "../service/api";
 import { theme } from "../../theme";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function TodoList() {
-  const [data, setData] = useState({});
+
+export default function EditTodoList() {
+
+
+  const [editedData, seteditedData] = useState({});
+
+  const { id } = useParams();
+ 
+  const { data, error, isLoading } = useSelector((state) => state.allLists || {});
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (id && data) {
+      const todoItem = data.find((todo) => todo._id === id);
+      if (todoItem) {
+        seteditedData(todoItem);
+      }
+    }
+  }, [id, data]);
+
+  console.log("edited",editedData)
 
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
     e.preventDefault();
-    setData({ ...data, [e.target.name]: e.target.value });
+    seteditedData({ ...editedData, [e.target.name]: e.target.value });
   };
 
   const handleAdd = () => {
-    const title = data.title;
-    dispatch(addTodo({ title }));
+    dispatch(updateList(editedData));
     dispatch(getAllLists());
+    navigate("/home")
   };
 
   const handlePress = (e) => {
@@ -35,7 +56,7 @@ export default function TodoList() {
         justifyContent: "center",
         alignItems: "center",
         height: "30vh",
-        [theme.breakpoints.down('sm')]: {mt:"10vh"}
+        [theme.breakpoints.down('sm')]: {mt:"30vh"}
       }}
     >
       <Box
@@ -51,6 +72,7 @@ export default function TodoList() {
           onChange={handleChange}
           name="title"
           sx={{ width: "100%" }}
+          value={editedData.title ?? ""}
           onKeyDown={handlePress}
         />
         <IconButton onClick={handleAdd}>

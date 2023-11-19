@@ -43,9 +43,44 @@ export const updateCompleted = async (req, res) => {
       { new: true }
     );
 
+    if (newCompleted) {
+      updatedTodo.completedAt = new Date().toLocaleString();
+    } else {
+      updatedTodo.completedAt = null;
+    }
+
+    await updatedTodo.save();
+
+    console.log(updatedTodo);
+
     return res.status(200).json(updatedTodo);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const updateTodoList = async (req, res) => {
+  try {
+    const { _id, title } = req.body;
+    const user = req.user;
+
+    const todoListItem = await Todo.findOne({ _id, user: user._id });
+
+    if (!todoListItem) {
+      return res.status(404).json({ error: "Todo list item not found" });
+    }
+
+    todoListItem.title = title;
+
+    await todoListItem.save();
+
+    const getLists = await Todo.find({ user });
+
+    return res.status(200).json(getLists);
+  } catch (error) {
+    console.error("Error updating todo list item:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -64,21 +99,19 @@ export const deleteSelected = async (req, res) => {
   }
 };
 
-
 export const deleteOneItem = async (req, res) => {
   try {
     console.log("hi");
-    const { id } = req.body; 
+    const { id } = req.body;
 
     const { _id, email } = req.user;
     const user = _id;
 
-    const deleteItem = await Todo.deleteOne({ _id: id, user }); 
+    const deleteItem = await Todo.deleteOne({ _id: id, user });
 
     if (deleteItem.deletedCount > 0) {
       return res.status(200).json({ id });
-    } 
-
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error while deleting one item!" });
