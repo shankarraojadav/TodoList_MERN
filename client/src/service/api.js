@@ -1,8 +1,8 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const url =  "http://localhost:3000"; 
-// "https://todolist-9ig6.onrender.com" ||
+const url = "https://todolist-9ig6.onrender.com" || "http://localhost:3000"; 
+
 
 export const googleAuth = createAsyncThunk(
   "signin",
