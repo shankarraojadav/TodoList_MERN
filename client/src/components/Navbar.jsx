@@ -1,35 +1,17 @@
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Toolbar,
-  Typography,
-  Button,
-  Menu,
-  MenuItem,
-} from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { theme } from "../../theme";
+import "./css/navbar.css";
 
 export default function Navbar() {
   const navigate = useNavigate();
-
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { user, isLoggedIn } = useSelector((state) => state.login || {});
-
   const { photoURL } = user || {};
 
-  //   console.log(photoURL)
-
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const handleLogout = () => {
@@ -39,9 +21,9 @@ export default function Navbar() {
   };
 
   return (
-    <AppBar position="fixed">
-      <Toolbar
-        sx={{
+    <div className="navbar_container">
+      <div
+        style={{
           background: "#D7CEF7",
           color: "#000",
           display: "flex",
@@ -50,55 +32,46 @@ export default function Navbar() {
         }}
       >
         {/* logo */}
-        <Box
-          component="img"
-          src="https://res.cloudinary.com/dflhxdxgb/image/upload/v1700148264/todo_ukgd6n.png"
-          sx={{ width: "8vh" }}
-        />
-        <Box
-          sx={{
-            mr: "10vh",
-            display: "flex",
-            alignItems: "center",
-          }}
+        <div className="">
+          <img
+            src="https://res.cloudinary.com/dflhxdxgb/image/upload/v1700148264/todo_ukgd6n.png"
+            width="50vh"
+            alt="logo"
+          />
+        </div>
+        <div
+          style={{ marginRight: "10vh", display: "flex", alignItems: "center" }}
         >
-        
-
-          <Box sx={{ borderRadius: "50%" }}>
-            <IconButton
-              id="basic-button"
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-              sx={{ border: "1px solid #8E8FFA", ml: "10vh" }}
-            >
-              <Box
-                component="img"
-                src={photoURL}
-                sx={{
-                  width: "5vh",
-                  height: "5vh",
-                  borderRadius: "50%",
-                }}
-              />
-            </IconButton>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
+          <div style={{ borderRadius: "50%" }}>
+            <button
+              onClick={handleMenuToggle}
+              style={{
+                border: "none",
+                borderRadius: "50%",
+                marginLeft: "10vh",
               }}
             >
-              <MenuItem onClick={handleClose}>
-                <Button onClick={handleLogout}>Logout</Button>
-              </MenuItem>
-            </Menu>
-          </Box>
-        </Box>
-      </Toolbar>
-    </AppBar>
+              <div>
+                <img
+                  src={photoURL}
+                  style={{
+                    width: "5vh",
+                    height: "5vh",
+                    borderRadius: "50%",
+                  }}
+                />
+              </div>
+            </button>
+            {isMenuOpen && (
+              <div className="custom-menu">
+                <button id="logout-btn" onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

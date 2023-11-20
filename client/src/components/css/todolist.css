@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+}
+
+.todo_input {
+  width: 100%;
+  border: none;
+  outline: none;
+}
+
+.todo_btn {
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 1vh;
+    background-color: #fff;
+}

@@ -1,21 +1,18 @@
-import { Box, IconButton, InputBase } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { addTodo } from "../service/api";
 import { useState, useEffect } from "react";
 import { getAllLists, updateList } from "../service/api";
-import { theme } from "../../theme";
 import { useNavigate, useParams } from "react-router-dom";
-
+import "./css/todolist.css";
 
 export default function EditTodoList() {
-
-
   const [editedData, seteditedData] = useState({});
 
   const { id } = useParams();
- 
-  const { data, error, isLoading } = useSelector((state) => state.allLists || {});
+
+  const { data, error, isLoading } = useSelector(
+    (state) => state.allLists || {}
+  );
 
   const navigate = useNavigate();
 
@@ -28,7 +25,7 @@ export default function EditTodoList() {
     }
   }, [id, data]);
 
-  console.log("edited",editedData)
+  console.log("edited", editedData);
 
   const dispatch = useDispatch();
 
@@ -40,45 +37,37 @@ export default function EditTodoList() {
   const handleAdd = () => {
     dispatch(updateList(editedData));
     dispatch(getAllLists());
-    navigate("/home")
+    navigate("/home");
   };
 
   const handlePress = (e) => {
-    if (e.key === 'Enter'){
+    if (e.key === "Enter") {
       handleAdd();
     }
-  }
+  };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "30vh",
-        [theme.breakpoints.down('sm')]: {mt:"30vh"}
-      }}
-    >
-      <Box
-        sx={{
+    <div className="container">
+      <div
+        style={{
           display: "flex",
           border: "1px solid black",
           width: "80vh",
           padding: "1vh",
         }}
       >
-        <InputBase
+        <input
           placeholder="Add to Todo List"
           onChange={handleChange}
           name="title"
-          sx={{ width: "100%" }}
-          value={editedData.title ?? ""}
           onKeyDown={handlePress}
+          className="todo_input"
+          value={editedData.title ?? ""}
         />
-        <IconButton onClick={handleAdd}>
-          <Search />
-        </IconButton>
-      </Box>
-    </Box>
+        <button onClick={handleAdd} className="todo_btn">
+          <Search sx={{ color: "blue" }} />
+        </button>
+      </div>
+    </div>
   );
 }

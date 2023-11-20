@@ -1,10 +1,8 @@
-import { Box, IconButton, InputBase } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
-import { addTodo } from "../service/api";
 import { useState } from "react";
-import { getAllLists,  } from "../service/api";
-import { theme } from "../../theme";
+import { getAllLists, addTodo } from "../service/api";
+import "./css/todolist.css";
 
 export default function TodoList() {
   const [data, setData] = useState({});
@@ -17,46 +15,40 @@ export default function TodoList() {
   };
 
   const handleAdd = () => {
-    const title = data.title;
-    dispatch(addTodo({ title }));
-    dispatch(getAllLists());
+    if (data) {
+      const title = data.title;
+      dispatch(addTodo({ title }));
+      dispatch(getAllLists());
+    }
   };
 
   const handlePress = (e) => {
-    if (e.key === 'Enter'){
+    if (e.key === "Enter") {
       handleAdd();
     }
-  }
+  };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "30vh",
-        [theme.breakpoints.down('sm')]: {mt:"10vh"}
-      }}
-    >
-      <Box
-        sx={{
+    <div className="container">
+      <div
+        style={{
           display: "flex",
           border: "1px solid black",
           width: "80vh",
           padding: "1vh",
         }}
       >
-        <InputBase
+        <input
           placeholder="Add to Todo List"
           onChange={handleChange}
           name="title"
-          sx={{ width: "100%" }}
           onKeyDown={handlePress}
+          className="todo_input"
         />
-        <IconButton onClick={handleAdd}>
-          <Search />
-        </IconButton>
-      </Box>
-    </Box>
+        <button onClick={handleAdd} className="todo_btn">
+          <Search sx={{color:"blue"}} />
+        </button>
+      </div>
+    </div>
   );
 }

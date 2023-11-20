@@ -1,17 +1,3 @@
-import {
-  Box,
-  Typography,
-  Checkbox,
-  Button,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
 import { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -22,14 +8,33 @@ import {
 } from "../service/api";
 import { useNavigate } from "react-router-dom";
 import { Delete, Edit } from "@mui/icons-material";
-import { theme } from "../../theme";
 import { NotificationContext } from "../context/NotificationProvider";
+import "./css/lists.css";
 
 export default function Lists() {
+  console.log("Component is rendering");
+
   const { updateNotification } = useContext(NotificationContext);
-  const { data } = useSelector((state) => state.allLists || { data: [] });
+
+  const { data, success } = useSelector(
+    (state) => state.allLists || { data: [] }
+  );
+
+  const { delete_success } = useSelector(
+    (state) => state.deleteOne || {  }
+  );
+
+
   const dispatch = useDispatch();
   const [selectAll, setSelectAll] = useState(false);
+
+  useEffect(() => {
+    console.log("Effect triggered");
+    if (delete_success) {
+      console.log("Dispatching getAllLists");
+      dispatch(getAllLists());
+    }
+  }, [delete_success, dispatch]);
 
   const navigate = useNavigate();
 
@@ -50,7 +55,7 @@ export default function Lists() {
     }));
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (selectAll) {
       dispatch(deleteSelected(selectAll));
     } else {
@@ -62,72 +67,55 @@ export default function Lists() {
     dispatch(deleteOne(id));
   };
 
-
   const handleEdit = (id) => {
     navigate(`/edit/${id}`);
-  }
-
-
-  
+  };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <div className="container_list">
       {data.length > 0 && (
-        <Box sx={{}}>
-          <Button onClick={handleSelectAll}>Select All</Button>
-          <Button onClick={handleDelete}>Delete All</Button>
-        </Box>
+        <div className="button-container">
+          <button onClick={handleSelectAll}>Select All</button>
+          <button onClick={handleDelete}>Delete All</button>
+        </div>
       )}
       {data.length > 0 && (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>TodoList</TableCell>
-                <TableCell>CreatedAt</TableCell>
-                <TableCell>CompletedAt</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Array.isArray(data) &&
-                data.map((todo, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      textDecoration: todo.completed ? "line-through" : "none",
-                    }}
-                  >
-                    <TableCell>
-                      <Checkbox
-                        checked={selectAll || todo.completed}
-                        onChange={() => handleToggle(todo._id, todo.completed)}
-                      />
-                      {todo.title}
-                    </TableCell>
-                    <TableCell>{todo.createdAt}</TableCell>
-                    <TableCell>{todo.completedAt}</TableCell>
-                    <TableCell>
-                      <IconButton onClick={() => handleDeleteOne(todo._id)}>
-                        <Delete />
-                      </IconButton>
-                      <IconButton onClick={() => handleEdit(todo._id)}>
-                        <Edit />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <table className="table_list">
+          <thead>
+            <tr>
+              <th>TodoList</th>
+              <th>CreatedAt</th>
+              <th>CompletedAt</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.isArray(data) &&
+              data.map((todo, index) => (
+                <tr key={index} className={todo.completed ? "completed" : ""}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectAll || todo.completed}
+                      onChange={() => handleToggle(todo._id, todo.completed)}
+                    />
+                    {todo.title}
+                  </td>
+                  <td>{todo.createdAt}</td>
+                  <td>{todo.completedAt}</td>
+                  <td className="action-buttons">
+                    <button onClick={() => handleDeleteOne(todo._id)}>
+                      <Delete />
+                    </button>
+                    <button onClick={() => handleEdit(todo._id)}>
+                      <Edit />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       )}
-    </Box>
+    </div>
   );
 }
