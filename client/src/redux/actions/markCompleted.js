@@ -7,8 +7,8 @@ import {
     GET_ALL_TODOS_SUCCESS
  } from "./type";
 
-const url = "http://localhost:3000";
-// "https://todolist-9ig6.onrender.com" ||
+const url = "https://todolist-9ig6.onrender.com" || "http://localhost:3000";
+
 
 const token = localStorage.getItem("jwt");
 
