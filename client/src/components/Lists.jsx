@@ -1,11 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getAllLists,
-  updateTodo,
-  deleteSelected,
-  deleteOne,
-} from "../service/api";
+import { getAllTodoList } from "../redux/actions/getAllTodos";
+import { markCompleted } from "../redux/actions/markCompleted";
+import { deleteMultiple } from "../redux/actions/deleteMultiple";
+import { deleteOne } from "../redux/actions/deleteOne";
 import { useNavigate } from "react-router-dom";
 import { Delete, Edit } from "@mui/icons-material";
 import { NotificationContext } from "../context/NotificationProvider";
@@ -16,35 +14,21 @@ export default function Lists() {
 
   const { updateNotification } = useContext(NotificationContext);
 
-  const { data, success } = useSelector(
-    (state) => state.allLists || { data: [] }
-  );
-
-  const { delete_success } = useSelector(
-    (state) => state.deleteOne || {  }
-  );
-
+  const {data} = useSelector((state) => state.AllTodos || {});
 
   const dispatch = useDispatch();
   const [selectAll, setSelectAll] = useState(false);
 
-  useEffect(() => {
-    console.log("Effect triggered");
-    if (delete_success) {
-      console.log("Dispatching getAllLists");
-      dispatch(getAllLists());
-    }
-  }, [delete_success, dispatch]);
+ 
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("useEffect - Dispatching getAllLists");
-    dispatch(getAllLists());
+    dispatch(getAllTodoList());
   }, []);
 
   const handleToggle = async (id, completed) => {
-    dispatch(updateTodo({ id, completed }));
+    dispatch(markCompleted({ id, completed }));
   };
 
   const handleSelectAll = () => {
@@ -55,9 +39,9 @@ export default function Lists() {
     }));
   };
 
-  const handleDelete = async () => {
+  const handleDeleteMultiple = async () => {
     if (selectAll) {
-      dispatch(deleteSelected(selectAll));
+      dispatch(deleteMultiple(selectAll));
     } else {
       updateNotification("error", "Please Select All before Deleting All!");
     }
@@ -73,13 +57,13 @@ export default function Lists() {
 
   return (
     <div className="container_list">
-      {data.length > 0 && (
+      {data && data.length > 0 && (
         <div className="button-container">
           <button onClick={handleSelectAll}>Select All</button>
-          <button onClick={handleDelete}>Delete All</button>
+          <button onClick={handleDeleteMultiple}>Delete All</button>
         </div>
       )}
-      {data.length > 0 && (
+      {data && data.length > 0 && (
         <table className="table_list">
           <thead>
             <tr>

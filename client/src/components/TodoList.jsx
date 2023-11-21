@@ -1,7 +1,7 @@
 import { Search } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { getAllLists, addTodo } from "../service/api";
+import { addTodo } from "../redux/actions/addTodo";
 import "./css/todolist.css";
 
 export default function TodoList() {
@@ -17,8 +17,8 @@ export default function TodoList() {
   const handleAdd = () => {
     if (data) {
       const title = data.title;
-      dispatch(addTodo({ title }));
-      dispatch(getAllLists());
+      dispatch(addTodo(title));
+      // dispatch(getAllLists());
     }
   };
 

@@ -1,7 +1,7 @@
 import { Search } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { getAllLists, updateList } from "../service/api";
+import { updateTodo } from "../redux/actions/updateTodo";
 import { useNavigate, useParams } from "react-router-dom";
 import "./css/todolist.css";
 
@@ -10,9 +10,8 @@ export default function EditTodoList() {
 
   const { id } = useParams();
 
-  const { data, error, isLoading } = useSelector(
-    (state) => state.allLists || {}
-  );
+  const { data } = useSelector((state) => state.AllTodos || {});
+
 
   const navigate = useNavigate();
 
@@ -25,7 +24,7 @@ export default function EditTodoList() {
     }
   }, [id, data]);
 
-  console.log("edited", editedData);
+
 
   const dispatch = useDispatch();
 
@@ -35,8 +34,8 @@ export default function EditTodoList() {
   };
 
   const handleAdd = () => {
-    dispatch(updateList(editedData));
-    dispatch(getAllLists());
+    dispatch(updateTodo(editedData));
+  
     navigate("/home");
   };
 

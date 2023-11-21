@@ -2,21 +2,12 @@ import { Box, Button, Typography } from "@mui/material";
 import { Google } from "@mui/icons-material";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../auth/firebaseConfig";
-import { googleAuth } from "../service/api";
-import { useDispatch, useSelector } from "react-redux";
+import { googleSignIn } from "../redux/actions/googleSignIn";
+import { useDispatch } from "react-redux";
 
 
 export default function Login() {
   const dispatch = useDispatch();
-
-  const { user, isLoading, isLoggedIn, error } = useSelector(
-    (state) => state.login || {}
-  );
-
-
-  
-
-
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -30,7 +21,7 @@ export default function Login() {
         photoURL: photoURL,
       };
 
-      dispatch(googleAuth(userData));
+      dispatch(googleSignIn(userData));
     } catch (error) {
       console.log(error)
     }

@@ -16,25 +16,31 @@ export const AddToDo = async (req, res) => {
 
     return res.status(200).json(getLists);
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return res.status(400).json({ error: "error while adding todo" });
   }
 };
 
 export const getAllLists = async (req, res) => {
   try {
+    
     const { _id, email } = req.user;
     const user = _id;
+    console.log(user)
     const getLists = await Todo.find({ user });
+    // console.log(getLists);
     return res.status(200).json(getLists);
+    
   } catch (error) {
-    return res.status(400).json({ message: "Errow while fetching all list" });
+    console.log(error)
+    return res.status(400).json({ message: "Errow while fetching all list", error: error.message });
   }
 };
 
 export const updateCompleted = async (req, res) => {
   try {
     const { id, completed } = req.body;
+    const user = req.user;
     const newCompleted = !completed;
 
     const updatedTodo = await Todo.findByIdAndUpdate(
@@ -51,9 +57,9 @@ export const updateCompleted = async (req, res) => {
 
     await updatedTodo.save();
 
-    console.log(updatedTodo);
+    const getLists = await Todo.find({ user });
 
-    return res.status(200).json(updatedTodo);
+    return res.status(200).json(getLists);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });

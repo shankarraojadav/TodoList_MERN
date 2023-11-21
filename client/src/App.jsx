@@ -4,40 +4,44 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { verifyToken } from "./service/api";
+import { verifyToken } from "./redux/actions/googleSignIn";
 import Home from "./components/Home";
 import EditTodoList from "./components/EditTodoList";
 
 export default function App() {
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const { user, isLoggedIn } = useSelector((state) => state.login || {});
 
+  const { userData, isLoggedIn } = useSelector((state) => state.signin || {});
+
+  console.log("user", userData)
+  // const verifiedTokenState = useSelector((state) => state.tokenVerified)
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("jwt", user?.jwtToken);
+    if (userData) {
+      console.log("verifying token");
+      localStorage.setItem("jwt", userData?.jwtToken);
     }
-  }, [user]);
+  }, [userData]);
 
-  const token = localStorage.getItem("jwt");
+  // const token = localStorage.getItem("jwt");
 
-  useEffect(() => {
-    if (token) {
-      dispatch(verifyToken(token));
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     dispatch(verifyToken(token));
+  //   }
+  // }, [token]);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/home");
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     navigate("/home");
+  //   }
+  // }, [isLoggedIn]);
 
   return (
     <Box>
-      {isLoggedIn && <Navbar />}
+      {/* {isLoggedIn && <Navbar />} */}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
