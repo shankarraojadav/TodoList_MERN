@@ -116,7 +116,9 @@ export const deleteOneItem = async (req, res) => {
     const deleteItem = await Todo.deleteOne({ _id: id, user });
 
     if (deleteItem.deletedCount > 0) {
-      return res.status(200).json({ id });
+      const getLists = await Todo.find({ user });
+
+      return res.status(200).json(getLists);
     }
   } catch (error) {
     console.error(error);

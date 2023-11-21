@@ -4,7 +4,8 @@ import {
   DELETE_ONE,
   DELETE_ONE_FAILURE,
   DELETE_MULTIPLE_SUCCESS,
-  DELETE_ONE_SUCCESS
+  DELETE_ONE_SUCCESS,
+  GET_ALL_TODOS_SUCCESS
 } from "./type";
 
 const url = "http://localhost:3000";
@@ -24,7 +25,7 @@ export const deleteOne = (id) => async (dispatch, getState) => {
         },
       });
 
-    dispatch({ type: DELETE_ONE_SUCCESS, payload: response.data });
+    dispatch({ type: GET_ALL_TODOS_SUCCESS, payload: response.data });
   } catch (error) {
     console.log(error);
     dispatch({ type: DELETE_ONE_FAILURE, payload: error.response.data });

@@ -16,7 +16,7 @@ import {
   DELETE_ONE_FAILURE,
   UPDATE_TODO,
   UPDATE_TODO_SUCCESS,
-  UPDATE_TODO_FAILURE,
+  UPDATE_TODO_FAILURE
 } from "../actions/type";
 
 export const addItemReducer = (state = {}, action) => {
@@ -34,6 +34,7 @@ export const addItemReducer = (state = {}, action) => {
   }
 };
 
+
 export const getAllTodos = (state = {}, action) => {
   switch (action.type) {
     case GET_ALL_TODOS:
@@ -48,6 +49,7 @@ export const getAllTodos = (state = {}, action) => {
       return state;
   }
 };
+
 
 export const markCompletedTask = (state = {}, action) => {
   switch (action.type) {
@@ -64,6 +66,7 @@ export const markCompletedTask = (state = {}, action) => {
   }
 };
 
+
 export const deleteMultipleReducer = (state = {}, action) => {
   switch (action.type) {
     case DELETE_MULTIPLE:
@@ -79,29 +82,17 @@ export const deleteMultipleReducer = (state = {}, action) => {
   }
 };
 
+
 export const deleteOneReducer = (state = {}, action) => {
   switch (action.type) {
     case DELETE_ONE:
       return { loading: true };
-
-    case DELETE_ONE_SUCCESS: {
-      const updatedData = state.data.filter(
-        (item) => item._id !== action.payload.id
-      );
-
-      return {
-        loading: false,
-        success: true,
-        data: updatedData, 
-      };
-    }
-
+    case DELETE_ONE_SUCCESS:
+      return { loading: false, success: true, data: action.payload };
     case DELETE_ONE_FAILURE:
       return { loading: false, error: action.payload.error };
-
     // case ADD_TODO_RESET:
     //   return {};
-
     default:
       return state;
   }

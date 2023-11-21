@@ -3,7 +3,8 @@ import axios from "axios";
 import {
   DELETE_MULTIPLE,
   DELETE_MULTIPLE_FAILURE,
-  DELETE_MULTIPLE_SUCCESS
+  DELETE_MULTIPLE_SUCCESS,
+  GET_ALL_TODOS_SUCCESS
 } from "./type";
 
 const url = "http://localhost:3000";
@@ -25,7 +26,7 @@ export const deleteMultiple =
         },
       });
 
-      dispatch({ type: DELETE_MULTIPLE_SUCCESS, payload: response.data });
+      dispatch({ type: GET_ALL_TODOS_SUCCESS, payload: response.data });
     } catch (error) {
       console.log(error);
       dispatch({ type: DELETE_MULTIPLE_FAILURE, payload: error.response.data });

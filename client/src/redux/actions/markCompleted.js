@@ -3,7 +3,8 @@ import axios from "axios";
 import { 
     MARK_COMPLETED,
     MARK_COMPLETED_SUCCESS,
-    MARK_COMPLETED_FAILURE
+    MARK_COMPLETED_FAILURE,
+    GET_ALL_TODOS_SUCCESS
  } from "./type";
 
 const url = "http://localhost:3000";
@@ -26,7 +27,7 @@ export const markCompleted = ({ id, completed }) => async (dispatch, getState) =
         }
       );
 
-    dispatch({ type: MARK_COMPLETED_SUCCESS, payload: response.data });
+    dispatch({ type: GET_ALL_TODOS_SUCCESS, payload: response.data });
   } catch (error) {
     console.log(error);
     dispatch({ type: MARK_COMPLETED_FAILURE, payload: error.response.data });
