@@ -11,13 +11,11 @@ import EditTodoList from "./components/EditTodoList";
 export default function App() {
   const dispatch = useDispatch();
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
 
   const { userData, isLoggedIn } = useSelector((state) => state.signin || {});
 
-  console.log("user", userData)
-  // const verifiedTokenState = useSelector((state) => state.tokenVerified)
   useEffect(() => {
     if (userData) {
       console.log("verifying token");
@@ -25,23 +23,23 @@ export default function App() {
     }
   }, [userData]);
 
-  // const token = localStorage.getItem("jwt");
+  const token = localStorage.getItem("jwt");
 
-  // useEffect(() => {
-  //   if (token) {
-  //     dispatch(verifyToken(token));
-  //   }
-  // }, [token]);
+  useEffect(() => {
+    if (token) {
+      dispatch(verifyToken(token));
+    }
+  }, [token]);
 
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     navigate("/home");
-  //   }
-  // }, [isLoggedIn]);
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/home");
+    }
+  }, [isLoggedIn]);
 
   return (
     <Box>
-      {/* {isLoggedIn && <Navbar />} */}
+      {isLoggedIn && <Navbar />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />

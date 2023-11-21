@@ -37,7 +37,7 @@ export const verifyToken = (token) => async (dispatch, getState) => {
       },
     });
     console.log("verify", data);
-    dispatch({ type: VERIFY_TOKEN_SUCCESS, payload: data });
+    dispatch({ type: GOOGLE_SIGNIN_SUCCESS, payload: data });
   } catch (error) {
     console.log("verifyerrror", error);
     dispatch({ type: VERIFY_TOKEN_FAILURE, payload: error.response.data });
