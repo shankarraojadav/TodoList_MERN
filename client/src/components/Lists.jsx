@@ -9,17 +9,20 @@ import { Delete, Edit } from "@mui/icons-material";
 import { NotificationContext } from "../context/NotificationProvider";
 import "./css/lists.css";
 
+// ... (previous imports)
+
 export default function Lists() {
   console.log("Component is rendering");
 
   const { updateNotification } = useContext(NotificationContext);
 
-  const {data} = useSelector((state) => state.AllTodos || {});
+  const { data } = useSelector((state) => state.AllTodos || {});
 
   const dispatch = useDispatch();
+  const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
- 
+
 
   const navigate = useNavigate();
 
@@ -27,29 +30,63 @@ export default function Lists() {
     dispatch(getAllTodoList());
   }, []);
 
-  const handleToggle = async (id, completed) => {
-    dispatch(markCompleted({ id, completed }));
+  useEffect(() => {
+    // Update selectedItems whenever data changes
+    setSelectedItems([]);
+    setSelectAll(false);
+  }, [data]);
+
+  const handleToggle = (id) => {
+    const updatedSelectedItems = selectedItems.includes(id)
+      ? selectedItems.filter((itemId) => itemId !== id)
+      : [...selectedItems, id];
+    setSelectedItems(updatedSelectedItems);
+    setSelectAll(updatedSelectedItems.length === data.length);
   };
 
   const handleSelectAll = () => {
+    const allItemIds = data.map((todo) => todo._id);
+    setSelectedItems(selectAll ? [] : allItemIds);
     setSelectAll(!selectAll);
-    const updatedData = data.map((todo) => ({
-      ...todo,
-      completed: !selectAll,
-    }));
   };
 
-  const handleDeleteMultiple = async () => {
-    if (selectAll) {
-      dispatch(deleteMultiple(selectAll));
+  const handleDeleteSelected = () => {
+    if (selectedItems.length > 0) {
+      dispatch(deleteMultiple(selectedItems));
+      setSelectedItems([]);
+      setSelectAll(false);
     } else {
-      updateNotification("error", "Please Select All before Deleting All!");
+      updateNotification("error", "Please select items to delete.");
     }
   };
 
-  const handleDeleteOne = (id) => {
-    dispatch(deleteOne(id));
+  const handleMarkCompletedSelected = () => {
+    if (selectedItems.length > 0) {
+      try {
+        // Fetch the current status of the selected items from the Redux store
+        const selectedItemsData = data.filter((todo) =>
+          selectedItems.includes(todo._id)
+        );
+  
+        // Dispatch the markCompleted action with the current status
+        selectedItemsData.forEach(async (todo) => {
+          const currentStatus = todo.completed;
+          console.log(currentStatus)
+          await dispatch(markCompleted({ ids: selectedItems, completed: currentStatus }));
+        });
+  
+        setSelectedItems([]);
+        setSelectAll(false);
+      } catch (error) {
+        console.error('Error in handleMarkCompletedSelected:', error);
+        updateNotification('error', 'Error marking items as completed.');
+      }
+    } else {
+      updateNotification('error', 'Please select items to mark as completed.');
+    }
   };
+  
+
 
   const handleEdit = (id) => {
     navigate(`/edit/${id}`);
@@ -59,17 +96,27 @@ export default function Lists() {
     <div className="container_list">
       {data && data.length > 0 && (
         <div className="button-container">
-          <button onClick={handleSelectAll}>Select All</button>
-          <button onClick={handleDeleteMultiple}>Delete All</button>
+          <button onClick={handleSelectAll}>
+            {selectAll ? "Deselect All" : "Select All"}
+          </button>
+          <button onClick={handleDeleteSelected}>Delete Selected</button>
+          <button onClick={handleMarkCompletedSelected}>
+            Mark as Completed
+          </button>
         </div>
       )}
       {data && data.length > 0 && (
         <table className="table_list">
           <thead>
             <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                />
+              </th>
               <th>TodoList</th>
-              <th>CreatedAt</th>
-              <th>CompletedAt</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -80,17 +127,18 @@ export default function Lists() {
                   <td>
                     <input
                       type="checkbox"
-                      checked={selectAll || todo.completed}
+                      checked={selectedItems.includes(todo._id)}
                       onChange={() => handleToggle(todo._id, todo.completed)}
                     />
-                    {todo.title}
                   </td>
-                  <td>{todo.createdAt}</td>
-                  <td>{todo.completedAt}</td>
+                  <td>
+                    <p style={{ fontSize: "3vh" }}>{todo.title}</p>
+                    <div style={{ display: "flex", justifyContent: "space-around" }}>
+                      <p>CreatedAt {todo.createdAt}</p>
+                      <p>CompletedAt {todo.completedAt}</p>
+                    </div>
+                  </td>
                   <td className="action-buttons">
-                    <button onClick={() => handleDeleteOne(todo._id)}>
-                      <Delete />
-                    </button>
                     <button onClick={() => handleEdit(todo._id)}>
                       <Edit />
                     </button>

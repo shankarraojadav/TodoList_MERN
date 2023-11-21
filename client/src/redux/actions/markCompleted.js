@@ -11,13 +11,14 @@ const url = "https://todolist-9ig6.onrender.com" || "http://localhost:3000";
 
 const token = localStorage.getItem("jwt");
 
-export const markCompleted = ({ id, completed }) => async (dispatch, getState) => {
+export const markCompleted = ({ ids, completed }) => async (dispatch, getState) => {
   try {
+    console.log({ids, completed})
     dispatch({ type: MARK_COMPLETED });
 
     const response = await axios.put(
         `${url}/updateCompleted`,
-        { id, completed },
+        { ids, completed },
         {
           headers: {
             authorization: "Bearer" + token,

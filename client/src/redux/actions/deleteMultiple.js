@@ -9,16 +9,17 @@ import {
 
 const url = "https://todolist-9ig6.onrender.com" || "http://localhost:3000";
 
+
 const token = localStorage.getItem("jwt");
 
 export const deleteMultiple =
-  (selectAll) =>
+  (selectedItems) =>
   async (dispatch, getState) => {
     try {
       dispatch({ type: DELETE_MULTIPLE});
 
      const response = await axios.delete(`${url}/deleteSelected`, {
-        data: { selectAll }, 
+        data: { selectedItems }, 
         headers: {
           authorization: "Bearer " + token,
           Accept: "application/json",

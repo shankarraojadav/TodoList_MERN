@@ -23,44 +23,45 @@ export const AddToDo = async (req, res) => {
 
 export const getAllLists = async (req, res) => {
   try {
-    
     const { _id, email } = req.user;
     const user = _id;
-    const getLists = await Todo.find({ user });
- 
-    return res.status(200).json(getLists);
-    
-  } catch (error) {
-    console.log(error)
-    return res.status(400).json({ message: "Errow while fetching all list", error: error.message });
-  }
-};
-
-export const updateCompleted = async (req, res) => {
-  try {
-    const { id, completed } = req.body;
-    const user = req.user;
-    const newCompleted = !completed;
-
-    const updatedTodo = await Todo.findByIdAndUpdate(
-      id,
-      { completed: newCompleted },
-      { new: true }
-    );
-
-    if (newCompleted) {
-      updatedTodo.completedAt = new Date().toLocaleString();
-    } else {
-      updatedTodo.completedAt = null;
-    }
-
-    await updatedTodo.save();
-
     const getLists = await Todo.find({ user });
 
     return res.status(200).json(getLists);
   } catch (error) {
     console.log(error);
+    return res
+      .status(400)
+      .json({ message: "Errow while fetching all list", error: error.message });
+  }
+};
+
+export const updateCompleted = async (req, res) => {
+  try {
+    const { ids, completed } = req.body;
+    const user = req.user;
+    const newCompleted = !completed;
+
+    // Update multiple Todo items with the provided ids
+    const updatedTodos = await Todo.updateMany(
+      { _id: { $in: ids }, user },
+      {
+        $set: {
+          completed: newCompleted,
+          completedAt: newCompleted ? new Date().toLocaleString() : null,
+        },
+      },
+      { new: true }
+    );
+
+    console.log("Updated Todos:", updatedTodos);
+
+    // Fetch and return the updated list of Todos
+    const getLists = await Todo.find({ user });
+
+    return res.status(200).json(getLists);
+  } catch (error) {
+    console.error("Error in updateCompleted:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -91,22 +92,29 @@ export const updateTodoList = async (req, res) => {
 
 export const deleteSelected = async (req, res) => {
   try {
-    const { selectAll } = req.body;
-
+    const { selectedItems } = req.body;
     const user = req.user;
 
-    if (selectAll) {
-      const deleteSelected = await Todo.deleteMany({ user });
+    if (selectedItems && selectedItems.length > 0) {
+      const deleteResult = await Todo.deleteMany({
+        _id: { $in: selectedItems },
+        user,
+      });
+
+      if (deleteResult.deletedCount > 0) {
+        console.log("hello");
+        const getLists = await Todo.find({ user });
+
+        return res.status(200).json(getLists);
+      }
     }
-    return res.status(200).json({ message: "successfully deleted All Lists!" });
-  } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
+
+    
+  } catch (error) {}
 };
 
 export const deleteOneItem = async (req, res) => {
   try {
- 
     const { id } = req.body;
 
     const { _id, email } = req.user;

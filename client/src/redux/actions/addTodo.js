@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { ADD_TODO_REQUEST, ADD_TODO_SUCCESS, ADD_TODO_FAILURE, GET_ALL_TODOS_SUCCESS } from "./type";
 
-const url = "https://todolist-9ig6.onrender.com" ||  "http://localhost:3000";
+const url = "https://todolist-9ig6.onrender.com" || "http://localhost:3000";
 
 
 const token = localStorage.getItem("jwt");
