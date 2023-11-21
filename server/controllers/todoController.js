@@ -26,9 +26,8 @@ export const getAllLists = async (req, res) => {
     
     const { _id, email } = req.user;
     const user = _id;
-    console.log(user)
     const getLists = await Todo.find({ user });
-    // console.log(getLists);
+ 
     return res.status(200).json(getLists);
     
   } catch (error) {
@@ -107,7 +106,7 @@ export const deleteSelected = async (req, res) => {
 
 export const deleteOneItem = async (req, res) => {
   try {
-    console.log("hi");
+ 
     const { id } = req.body;
 
     const { _id, email } = req.user;

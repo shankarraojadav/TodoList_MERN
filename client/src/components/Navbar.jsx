@@ -7,8 +7,9 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const { user, isLoggedIn } = useSelector((state) => state.login || {});
-  const { photoURL } = user || {};
+  const { userData, isLoggedIn } = useSelector((state) => state.signin || {});
+  const { photoURL } = userData || {};
+  console.log(photoURL)
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
