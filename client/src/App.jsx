@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import Login from "./auth/Login";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
