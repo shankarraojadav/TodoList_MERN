@@ -138,11 +138,11 @@ export default function Lists() {
                         />
                       </td>
                       <td>
-                        <p style={{ fontSize: "3vh" }}>{todo.title}</p>
+                        <p style={{ fontSize: "3vh", }}>{todo.title}</p>
                         <div
                           style={{
                             display: "flex",
-                            justifyContent: "space-around",
+                            
                           }}
                         >
                           {
