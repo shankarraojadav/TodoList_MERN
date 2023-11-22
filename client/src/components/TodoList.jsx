@@ -5,20 +5,17 @@ import { addTodo } from "../redux/actions/addTodo";
 import "./css/todolist.css";
 
 export default function TodoList() {
-  const [data, setData] = useState({});
-
+  const [title, setTitle] = useState("");
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
-    e.preventDefault();
-    setData({ ...data, [e.target.name]: e.target.value });
+    setTitle(e.target.value);
   };
 
   const handleAdd = () => {
-    if (data) {
-      const title = data.title;
+    if (title.trim() !== "") {
       dispatch(addTodo(title));
-      // dispatch(getAllLists());
+      setTitle("");
     }
   };
 
@@ -41,13 +38,10 @@ export default function TodoList() {
         <input
           placeholder="Add to Todo List"
           onChange={handleChange}
-          name="title"
+          value={title}
           onKeyDown={handlePress}
           className="todo_input"
         />
-        <button onClick={handleAdd} className="todo_btn">
-          <Search sx={{color:"blue"}} />
-        </button>
       </div>
     </div>
   );
