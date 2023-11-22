@@ -16,7 +16,6 @@ export default function App() {
 
   const { userData, isLoggedIn } = useSelector((state) => state.signin || {});
 
-  console.log("user", userData, "is", isLoggedIn)
   useEffect(() => {
     if (userData) {
       console.log("verifying token");
