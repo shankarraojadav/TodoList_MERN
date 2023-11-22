@@ -37,13 +37,13 @@ export default function App() {
   }, [isLoggedIn]);
 
   return (
-    <Box>
+    <div>
       {isLoggedIn && <Navbar />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/edit/:id" element={ <EditTodoList /> } />
       </Routes>
-    </Box>
+    </div>
   );
 }

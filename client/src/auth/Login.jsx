@@ -51,6 +51,7 @@ export default function Login() {
           }}
         >
           <img
+            width="30vh"
             src="https://res.cloudinary.com/dflhxdxgb/image/upload/v1700642658/google_x5kl6j.svg"
             style={{ fontSize: "3vh", mr: "1vh" }}
           />
