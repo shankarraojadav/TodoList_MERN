@@ -113,22 +113,3 @@ export const deleteSelected = async (req, res) => {
   } catch (error) {}
 };
 
-export const deleteOneItem = async (req, res) => {
-  try {
-    const { id } = req.body;
-
-    const { _id, email } = req.user;
-    const user = _id;
-
-    const deleteItem = await Todo.deleteOne({ _id: id, user });
-
-    if (deleteItem.deletedCount > 0) {
-      const getLists = await Todo.find({ user });
-
-      return res.status(200).json(getLists);
-    }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Error while deleting one item!" });
-  }
-};

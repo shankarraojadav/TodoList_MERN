@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./css/navbar.css";
@@ -7,7 +7,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const { userData, isLoggedIn } = useSelector((state) => state.signin || {});
+  const { userData} = useSelector((state) => state.signin || {});
   const { photoURL } = userData || {};
   console.log(photoURL)
 

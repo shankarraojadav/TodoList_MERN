@@ -3,13 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllTodoList } from "../redux/actions/getAllTodos";
 import { markCompleted } from "../redux/actions/markCompleted";
 import { deleteMultiple } from "../redux/actions/deleteMultiple";
-import { deleteOne } from "../redux/actions/deleteOne";
 import { useNavigate } from "react-router-dom";
-import { Delete, Edit } from "@mui/icons-material";
 import { NotificationContext } from "../context/NotificationProvider";
 import "./css/lists.css";
-
-// ... (previous imports)
 
 export default function Lists() {
   console.log("Component is rendering");
@@ -29,7 +25,6 @@ export default function Lists() {
   }, []);
 
   useEffect(() => {
-    // Update selectedItems whenever data changes
     setSelectedItems([]);
     setSelectAll(false);
   }, [data]);
@@ -61,12 +56,10 @@ export default function Lists() {
   const handleMarkCompletedSelected = () => {
     if (selectedItems.length > 0) {
       try {
-        // Fetch the current status of the selected items from the Redux store
         const selectedItemsData = data.filter((todo) =>
           selectedItems.includes(todo._id)
         );
 
-        // Dispatch the markCompleted action with the current status
         selectedItemsData.forEach(async (todo) => {
           const currentStatus = todo.completed;
           console.log(currentStatus);
@@ -95,7 +88,7 @@ export default function Lists() {
       <div>
         {data && data.length > 0 && (
           <div className="button-container">
-            <div style={{borderRight:"1px solid black"}}>
+            <div style={{ borderRight: "1px solid black" }}>
               <button onClick={handleDeleteSelected}>Delete</button>
             </div>
             <button onClick={handleMarkCompletedSelected}>
@@ -138,22 +131,22 @@ export default function Lists() {
                         />
                       </td>
                       <td>
-                        <p style={{ fontSize: "3vh", }}>{todo.title}</p>
+                        <p style={{ fontSize: "3vh" }}>{todo.title}</p>
                         <div
                           style={{
                             display: "flex",
-                            
                           }}
                         >
-                          {
-                            todo.completed ? <p>completed at - {todo.completedAt}</p>:
+                          {todo.completed ? (
+                            <p>completed at - {todo.completedAt}</p>
+                          ) : (
                             <p>created at - {todo.createdAt}</p>
-                          }
+                          )}
                         </div>
                       </td>
                       <td className="action-buttons">
                         <button onClick={() => handleEdit(todo._id)}>
-                          <Edit />
+                          <img src="https://res.cloudinary.com/dflhxdxgb/image/upload/v1700640617/edit-svgrepo-com_rom6ma.svg" width="30vh" alt="edit" />
                         </button>
                       </td>
                     </tr>

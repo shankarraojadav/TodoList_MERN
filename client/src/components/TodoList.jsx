@@ -1,4 +1,3 @@
-import { Search } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { addTodo } from "../redux/actions/addTodo";
@@ -42,6 +41,7 @@ export default function TodoList() {
           onKeyDown={handlePress}
           className="todo_input"
         />
+        <img src="https://res.cloudinary.com/dflhxdxgb/image/upload/v1700640728/search_gt5pvf.svg" width="30vh" alt="" />
       </div>
     </div>
   );
