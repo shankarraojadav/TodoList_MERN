@@ -1,4 +1,4 @@
-import SignIn from "../model/userModel.js";
+import userSignIn from "../model/userModel.js";
 import jwt from "jsonwebtoken";
 
 export const Auth = async (req, res, next) => {
@@ -17,7 +17,7 @@ export const Auth = async (req, res, next) => {
 
     const { _id } = decode;
 
-    const user = await SignIn.findById({ _id });
+    const user = await userSignIn.findById({ _id });
 
     if (!user) return res.status(400).json("Token related to user not found");
 

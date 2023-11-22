@@ -1,17 +1,17 @@
-import SignIn from "../model/userModel.js";
+import userSignIn from "../model/userModel.js";
 import jwt from "jsonwebtoken";
 
 export const googleSignin = async (req, res) => {
   const { uid, displayName, email, photoURL } = req.body;
 
-  const oldUser = await SignIn.findOne({ email });
+  const oldUser = await userSignIn.findOne({ email });
 
   if (oldUser) {
     return res.status(200).json(oldUser);
   }
 
   try {
-    const newUser = new SignIn({ uid, displayName, email, photoURL });
+    const newUser = new userSignIn({ uid, displayName, email, photoURL });
     await newUser.save();
 
     const { _id } = newUser;

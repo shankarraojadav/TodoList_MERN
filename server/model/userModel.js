@@ -24,6 +24,6 @@ const userSchema = mongoose.Schema({
   },
 });
 
-const SignIn = mongoose.model("todoUser", userSchema);
+const userSignIn = mongoose.model("todoUser", userSchema);
 
-export default SignIn;
+export default userSignIn;
