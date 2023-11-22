@@ -1,4 +1,3 @@
-import { Search } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { updateTodo } from "../redux/actions/updateTodo";
@@ -12,7 +11,6 @@ export default function EditTodoList() {
 
   const { data } = useSelector((state) => state.AllTodos || {});
 
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,8 +22,6 @@ export default function EditTodoList() {
     }
   }, [id, data]);
 
-
-
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -35,7 +31,7 @@ export default function EditTodoList() {
 
   const handleAdd = () => {
     dispatch(updateTodo(editedData));
-  
+
     navigate("/home");
   };
 
@@ -63,9 +59,11 @@ export default function EditTodoList() {
           className="todo_input"
           value={editedData.title ?? ""}
         />
-        <button onClick={handleAdd} className="todo_btn">
-          <Search sx={{ color: "blue" }} />
-        </button>
+        <img
+          src="https://res.cloudinary.com/dflhxdxgb/image/upload/v1700640728/search_gt5pvf.svg"
+          width="30vh"
+          alt="search"
+        />
       </div>
     </div>
   );
