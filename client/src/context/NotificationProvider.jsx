@@ -15,11 +15,14 @@ export default function NotificationProvider({ children }) {
 
   const updateNotification = (type, message) => {
     setNotification({ open: true, message, type });
+
+    // Automatically close the notification after 3000 milliseconds (3 seconds)
+    setTimeout(() => {
+      handleClose();
+    }, 3000);
   };
 
-  
   const CustomNotification = () => {
-   
     return (
       <div
         style={{
