@@ -1,8 +1,10 @@
 import { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  getAllTodoList, deleteMultiple, markCompleted
-} from "../redux/actions/todoActions"
+  getAllTodoList,
+  deleteMultiple,
+  markCompleted,
+} from "../redux/actions/todoActions";
 import { useNavigate } from "react-router-dom";
 import { NotificationContext } from "../context/NotificationProvider";
 import "./css/lists.css";
@@ -20,19 +22,15 @@ export default function Lists() {
 
   const { addData } = useSelector((state) => state.addTodo || {});
 
-
   useEffect(() => {
     if (markData?.status) {
       dispatch(getAllTodoList());
-    }
-    else if(deleteData?.status) {
+    } else if (deleteData?.status) {
+      dispatch(getAllTodoList());
+    } else if (addData?.status) {
       dispatch(getAllTodoList());
     }
-    else if(addData?.status) {
-      dispatch(getAllTodoList());
-    }
-  }, [markData, deleteData, addData])
-
+  }, [markData, deleteData, addData]);
 
   const dispatch = useDispatch();
   const [selectedItems, setSelectedItems] = useState([]);
@@ -169,6 +167,8 @@ export default function Lists() {
                         >
                           {todo.completed ? (
                             <p>completed at - {todo.completedAt}</p>
+                          ) : todo.updatedAt ? (
+                            <p>updated at - {todo.updatedAt}</p>
                           ) : (
                             <p>created at - {todo.createdAt}</p>
                           )}
