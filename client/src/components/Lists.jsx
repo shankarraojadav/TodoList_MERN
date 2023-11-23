@@ -35,7 +35,7 @@ export default function Lists() {
     else if (updateData?.status) {
       dispatch(getAllTodoList())
     }
-  }, [markData, deleteData, addData]);
+  }, [markData, deleteData, addData, updateData]);
 
   const dispatch = useDispatch();
   const [selectedItems, setSelectedItems] = useState([]);
