@@ -22,6 +22,8 @@ export default function Lists() {
 
   const { addData } = useSelector((state) => state.addTodo || {});
 
+  const { updateData } = useSelector((state) => state. UpdateTodo || {});
+
   useEffect(() => {
     if (markData?.status) {
       dispatch(getAllTodoList());
@@ -29,6 +31,9 @@ export default function Lists() {
       dispatch(getAllTodoList());
     } else if (addData?.status) {
       dispatch(getAllTodoList());
+    }
+    else if (updateData?.status) {
+      dispatch(getAllTodoList())
     }
   }, [markData, deleteData, addData]);
 
