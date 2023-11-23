@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { addTodo } from "../redux/actions/addTodo";
+import { addTodoList } from "../redux/actions/todoActions";
 import "./css/todolist.css";
 
 export default function TodoList() {
@@ -13,7 +13,7 @@ export default function TodoList() {
 
   const handleAdd = () => {
     if (title.trim() !== "") {
-      dispatch(addTodo(title));
+      dispatch(addTodoList(title));
       setTitle("");
     }
   };

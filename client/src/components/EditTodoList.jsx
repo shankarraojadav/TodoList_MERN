@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { updateTodo } from "../redux/actions/updateTodo";
+import { updateTodo, getTodoById } from "../redux/actions/todoActions";
 import { useNavigate, useParams } from "react-router-dom";
 import "./css/todolist.css";
 
@@ -8,21 +8,21 @@ export default function EditTodoList() {
   const [editedData, seteditedData] = useState({});
 
   const { id } = useParams();
-
-  const { data } = useSelector((state) => state.AllTodos || {});
-
+  const { toDoByIdData } = useSelector((state) => state.getTodoById || {});
+  const todo = toDoByIdData?.todo || {};
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (id && data) {
-      const todoItem = data.find((todo) => todo._id === id);
-      if (todoItem) {
-        seteditedData(todoItem);
-      }
-    }
-  }, [id, data]);
+    dispatch(getTodoById(id));
+  }, [dispatch, id]);
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    // Check if status is truthy and set the entire todo object as editedData
+    if (toDoByIdData?.status) {
+      seteditedData(todo);
+    }
+  }, [toDoByIdData, todo]);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -31,7 +31,6 @@ export default function EditTodoList() {
 
   const handleAdd = () => {
     dispatch(updateTodo(editedData));
-
     navigate("/home");
   };
 

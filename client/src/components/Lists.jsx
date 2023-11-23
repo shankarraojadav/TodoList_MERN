@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllTodoList } from "../redux/actions/getAllTodos";
-import { markCompleted } from "../redux/actions/markCompleted";
-import { deleteMultiple } from "../redux/actions/deleteMultiple";
+import {
+  getAllTodoList, deleteMultiple, markCompleted
+} from "../redux/actions/todoActions"
 import { useNavigate } from "react-router-dom";
 import { NotificationContext } from "../context/NotificationProvider";
 import "./css/lists.css";
@@ -13,6 +13,26 @@ export default function Lists() {
   const { updateNotification } = useContext(NotificationContext);
 
   const { data } = useSelector((state) => state.AllTodos || {});
+
+  const { markData } = useSelector((state) => state.markComplete || {});
+
+  const { deleteData } = useSelector((state) => state.DeleteMultiple || {});
+
+  const { addData } = useSelector((state) => state.addTodo || {});
+
+
+  useEffect(() => {
+    if (markData?.status) {
+      dispatch(getAllTodoList());
+    }
+    else if(deleteData?.status) {
+      dispatch(getAllTodoList());
+    }
+    else if(addData?.status) {
+      dispatch(getAllTodoList());
+    }
+  }, [markData, deleteData, addData])
+
 
   const dispatch = useDispatch();
   const [selectedItems, setSelectedItems] = useState([]);
@@ -38,7 +58,7 @@ export default function Lists() {
   };
 
   const handleSelectAll = () => {
-    const allItemIds = data.map((todo) => todo._id);
+    const allItemIds = data?.todos?.map((todo) => todo._id) || [];
     setSelectedItems(selectAll ? [] : allItemIds);
     setSelectAll(!selectAll);
   };
@@ -54,22 +74,32 @@ export default function Lists() {
   };
 
   const handleMarkCompletedSelected = () => {
+    console.log("Data before handleMarkCompletedSelected:", data);
+
     if (selectedItems.length > 0) {
       try {
-        const selectedItemsData = data.filter((todo) =>
+        const selectedItemsData = data?.todos?.filter((todo) =>
           selectedItems.includes(todo._id)
         );
 
-        selectedItemsData.forEach(async (todo) => {
-          const currentStatus = todo.completed;
-          console.log(currentStatus);
-          await dispatch(
-            markCompleted({ ids: selectedItems, completed: currentStatus })
-          );
-        });
+        if (selectedItemsData) {
+          selectedItemsData.forEach(async (todo) => {
+            const currentStatus = todo.completed;
+            console.log("Current Status:", currentStatus);
 
-        setSelectedItems([]);
-        setSelectAll(false);
+            await dispatch(
+              markCompleted({ ids: selectedItems, completed: currentStatus })
+            );
+          });
+
+          setSelectedItems([]);
+          setSelectAll(false);
+        } else {
+          console.error(
+            "Error in handleMarkCompletedSelected: data.todos is not an array"
+          );
+          updateNotification("error", "Error marking items as completed.");
+        }
       } catch (error) {
         console.error("Error in handleMarkCompletedSelected:", error);
         updateNotification("error", "Error marking items as completed.");
@@ -86,7 +116,7 @@ export default function Lists() {
   return (
     <div>
       <div>
-        {data && data.length > 0 && (
+        {data && data.status && data.todos && data.todos.length > 0 && (
           <div className="button-container">
             <div style={{ borderRight: "1px solid black" }}>
               <button onClick={handleDeleteSelected}>Delete</button>
@@ -99,7 +129,7 @@ export default function Lists() {
       </div>
       <div className="container_list">
         <div>
-          {data && data.length > 0 && (
+          {data && data.todos && data.todos.length > 0 && (
             <table className="table_list">
               <thead>
                 <tr>
@@ -115,8 +145,8 @@ export default function Lists() {
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(data) &&
-                  data.map((todo, index) => (
+                {Array.isArray(data.todos) &&
+                  data.todos.map((todo, index) => (
                     <tr
                       key={index}
                       className={todo.completed ? "completed" : ""}
@@ -146,7 +176,11 @@ export default function Lists() {
                       </td>
                       <td className="action-buttons">
                         <button onClick={() => handleEdit(todo._id)}>
-                          <img src="https://res.cloudinary.com/dflhxdxgb/image/upload/v1700640617/edit-svgrepo-com_rom6ma.svg" width="30vh" alt="edit" />
+                          <img
+                            src="https://res.cloudinary.com/dflhxdxgb/image/upload/v1700640617/edit-svgrepo-com_rom6ma.svg"
+                            width="30vh"
+                            alt="edit"
+                          />
                         </button>
                       </td>
                     </tr>
